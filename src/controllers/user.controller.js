@@ -42,7 +42,7 @@ const registerUser = asynchandler(async (req, res) => {
 
     console.log(req.files);
 
-    const avatarLocalPath = req.files?.avatar?.[0]?.path;
+    const avatarLocalPath = req.files?.avatar[0]?.path;
 
     let coverImageLocalPath;
 
@@ -64,11 +64,11 @@ const registerUser = asynchandler(async (req, res) => {
 
     const user = await User.create({
         fullname,
-        avatar: avatar.url,
         email,
         coverImage: coverImage?.url || "",
         password,
-        username: username.toLowerCase()
+        username: username.toLowerCase(),
+        avatar: avatar.url
     });
 
     const createdUser = await User.findById(user._id).select(
@@ -88,9 +88,8 @@ const loginUser = asynchandler( async (req, res) => {
     //enter username nd password
     //check 
     const { email, username, password } = req.body
-    console.log("Email is : " , email)
 
-    if(!username && !email){
+    if(!username || !email){
         throw new ApiError(401 , "username or email is required")
     }
 
